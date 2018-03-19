@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Anthem Avenger</title>
+    <style>
+        .flipped {
+            -moz-transform: scaleX(-1);
+            -o-transform: scaleX(-1);
+            -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+            filter: FlipH;
+            -ms-filter: "FlipH";
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script>
+
+        var trumpV = 0;
+
+        $( document ).ready(function() {
+
+            $("#trump").click( function() {
+                console.log("click");
+                $("#trump").animate({left: "+=200px"});
+            });
+
+            $(document).keydown(function (event) {
+                if (event.key == "s") {
+                    console.log("key down");
+                    trumpV +=.5;
+                    
+                }
+                if (event.key == "a") {
+                    console.log("key down");
+                    trumpV -=.5;
+                }
+            })
+
+        });
+
+        //main game loop
+        function loop(timestamp) {
+            var progress = timestamp - lastRender
+
+            //handle animation
+            var oldX = parseInt($("#trump").css("left"));
+            var newX = oldX + trumpV;
+            if(newX > 1000) {
+                newX = -200;
+            }
+            var newPos = {left: newX};
+            $("#trump").animate(newPos,0);
+
+            //flip image based on direction
+            if(trumpV >= 0) {
+                $("#trump").removeClass("flipped");
+            } else {
+                $("#trump").addClass("flipped");
+            }
+
+            // update(progress)
+            // draw()
+
+            
+            lastRender = timestamp
+            window.requestAnimationFrame(loop)
+        }
+        var lastRender = 0
+        window.requestAnimationFrame(loop)
+
+    </script>
+</head>
+
+<body>
+
+    <img id="trump" src="images/TrumpRun.gif" alt="" style="height: 300px; position: absolute">
+
+</body>
+</html>
