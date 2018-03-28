@@ -5,21 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Anthem Avenger</title>
-    <style>
-        .flipped {
-            -moz-transform: scaleX(-1);
-            -o-transform: scaleX(-1);
-            -webkit-transform: scaleX(-1);
-            transform: scaleX(-1);
-            filter: FlipH;
-            -ms-filter: "FlipH";
-        }
-    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script>
 
         var trumpV = 0;
-
+        var trumpIterator = 0;
+        var trumpHiterator = 0;
+        var trumpPunching = false;
+        var trumpKicking = false;
+        var trumpHumping = false;
+        var trumpHit = false;
+        var trumpFilePath = "images/Trump/Run/TrumpRun_0";
+   
         $( document ).ready(function() {
 
             $("#trump").click( function() {
@@ -29,14 +26,37 @@
 
             $(document).keydown(function (event) {
                 if (event.key == "s") {
-                    console.log("key down");
+                    console.log("s down");
                     trumpV +=.5;
                     
                 }
-                if (event.key == "a") {
-                    console.log("key down");
-                    trumpV -=.5;
+                if (event.key == "h") {
+                    console.log("h down");
+                    patriotHit = true;
+                    
                 }
+                if (event.key == "p") {
+                    console.log("p down");
+                    trumpPunching = true;
+                    
+                }
+                if (event.key == "k") {
+                    console.log("k down");
+                    trumpKicking = true;
+                    
+                }
+                if (event.key == "d") {
+                    console.log("d down");
+                    trumpHiterator = 0;
+                    trumpHit = true;
+                    
+                }
+                if (event.key == "h") {
+                    console.log("h down");
+                    trumpHumping = true;
+                    
+                }
+
             })
 
         });
@@ -45,33 +65,102 @@
         function loop(timestamp) {
             var progress = timestamp - lastRender
 
-            //handle animation
-            var oldX = parseInt($("#trump").css("left"));
-            var newX = oldX + trumpV;
-            if(newX > 1000) {
-                newX = -200;
-            }
-            var newPos = {left: newX};
-            $("#trump").animate(newPos,0);
+            // //handle animation
+            // var oldX = parseInt($("#patriot").css("left"));
+            // var newX = oldX - 0;
+            // if(newX < -200) {
+            //     newX = 1300;
+            //     patriotRunning = true;
+            //     $("#patriot").prop("src","images/Patriot/PatriotRun.gif")
+            // }
+            // var newPos = {left: newX};
 
-            //flip image based on direction
-            if(trumpV >= 0) {
-                $("#trump").removeClass("flipped");
-            } else {
-                $("#trump").addClass("flipped");
-            }
-
+            // $("#patriot").animate(newPos,0);
+                
             // update(progress)
             // draw()
 
-            //DEEZ NUTS
-            //HUGE BALLS
-            //Bigger Scrotes
-            //Nads on my forhead
-            //the knee slapper
+            handleTrumpAnimations();
+            
+
+            // //check if player is hit
+            // if(parseInt($("#patriot").css("left")) > 200 && parseInt($("#patriot").css("left")) < 300){
+            //     patriotHit = true;
+                
+            //     console.log("hit");
+            // }
+
+            // //run player hit animation
+            // if (patriotHit == true && patriotRunning){
+            //     $("#patriot").prop("src","images/Patriot/PatriotRunHit.gif")
+            //     patriotRunning = false;
+            //     patriotHit = false;
+            // }
             
             lastRender = timestamp
             window.requestAnimationFrame(loop)
+        }
+
+        function handleTrumpAnimations(){
+            if(trumpPunching){
+                    trumpFilePath = "images/Trump/Punch/TrumpPunch_0";
+                    trumpIterator = 0;
+                    trumpPunching = false;
+                } else if(trumpKicking){
+                    trumpFilePath = "images/Trump/Kick/TrumpKick_0";
+                    trumpIterator = 0;
+                    trumpKicking = false;
+                } else if(trumpHit){
+                    trumpFilePath = "images/Trump/Hit/TrumpHit_";
+                } else if(trumpHumping){
+                    trumpFilePath = "images/Trump/Hump/TrumpHump_0";
+                    trumpIterator = 0;
+                    trumpHumping = false;
+                }
+                
+                    //normal animations
+                    if(trumpIterator < 10){
+                        var newImage = trumpFilePath + "0" + trumpIterator + ".png";
+                    } else {
+                        var newImage = trumpFilePath + trumpIterator + ".png";
+                    }
+                    $("#trump").prop("src",newImage)
+
+                    if(trumpHit){
+                        //trump hit animations
+                        if(trumpHiterator < 10){
+                            var newImage = trumpFilePath + "00" + trumpHiterator + ".png";
+                        } else if (trumpHiterator < 100) {
+                            var newImage = trumpFilePath +  "0" + trumpHiterator + ".png";
+                        } else {
+                            var newImage = trumpFilePath + trumpHiterator + ".png";
+                        }
+                        $("#trump").prop("src",newImage)
+
+                        if( $("#trump").css("left")  == "300px"){
+
+                            $("#trump").css("left","-=150px");
+
+                        }
+
+                    }
+                    
+                    trumpHiterator++;
+                    trumpIterator++;
+
+                    //reset trumpIterator
+                    if(trumpIterator == 50 ){
+                        trumpFilePath = "images/Trump/Run/TrumpRun_0";
+                        trumpIterator = 0;
+                    }
+
+                    //reset trumpHiterator
+                    if(trumpHiterator == 136 ){
+                        trumpFilePath = "images/Trump/Run/TrumpRun_0";
+                        trumpHiterator = 0;
+                        trumpHit = false;
+                        $("#trump").css("left","300px");
+                    }
         }
         var lastRender = 0
         window.requestAnimationFrame(loop)
@@ -81,7 +170,7 @@
 
 <body>
 
-    <img id="trump" src="images/TrumpRun.gif" alt="" style="height: 300px; position: absolute">
-
+    <img id="trump" src="images/Trump/Run/TrumpRun_000.png" alt="" style="left: 300px; height: 300px; position: absolute">  
+    
 </body>
 </html>
