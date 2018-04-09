@@ -8,28 +8,60 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script>
 
-        var trumpV = 0;
+        //animation vars
+        var stop = false;
+        var frameCount = 0;
+        var $results = $("#results");
+        var fps, fpsInterval, startTime, now, then, elapsed;
+
+        //game vars
+        var gameActive = true;
+
+        //trump vars
         var trumpIterator = 0;
         var trumpHiterator = 0;
+        var trumpRunning = true;
+        var trumpIdle = false;
         var trumpPunching = false;
         var trumpKicking = false;
         var trumpHumping = false;
         var trumpHit = false;
         var trumpFilePath = "images/Trump/Run/TrumpRun_0";
+
+        //patriot vars
+        var patriotIterator = 0;
+        var patriotRunning = false;
+        var patriotHit = false;
+        var patriotFilePath = "images/Patriot/Run/PatriotRun_0";
+
+        //49er vars
+        var fortyNinerIterator = 0;
+        var fortyNinerRunning = true;
+        var fortyNinerHit = false;
+        var fortyNinerFilePath = "images/49er/Run/49erRun_0";
+
+        //white viking vars
+        var whiteVikingIterator = 0;
+        var whiteVikingRunning = false;
+        var whiteVikingHit = false;
+        var whiteVikingFilePath = "images/White Viking/Run/WhiteVikingRun_0";
+
+        //black eagle vars
+        var blackEagleIterator = 0;
+        var blackEagleRunning = true;
+        var blackEagleHit = false;
+        var blackEagleFilePath = "images/Black Eagle/Run/BlackEagleRun_0";
+
+        //black eagle vars
+        var blackSteelerIterator = 0;
+        var blackSteelerRunning = false;
+        var blackSteelerHit = false;
+        var blackSteelerFilePath = "images/Black Steeler/Run/BlackSteelerRun_0";
    
         $( document ).ready(function() {
 
-            $("#trump").click( function() {
-                console.log("click");
-                $("#trump").animate({left: "+=200px"});
-            });
-
             $(document).keydown(function (event) {
-                if (event.key == "s") {
-                    console.log("s down");
-                    trumpV +=.5;
-                    
-                }
+                
                 if (event.key == "h") {
                     console.log("h down");
                     patriotHit = true;
@@ -56,49 +88,116 @@
                     trumpHumping = true;
                     
                 }
+                if (event.key == "r") {
+                    console.log("r down");
+                    trumpRunning = true;
+                    trumpidle = false;
+                    
+                }
 
             })
 
         });
 
-        //main game loop
-        function loop(timestamp) {
-            var progress = timestamp - lastRender
+        // //main game loop
+        function animate() {
 
-            // //handle animation
-            // var oldX = parseInt($("#patriot").css("left"));
-            // var newX = oldX - 0;
-            // if(newX < -200) {
-            //     newX = 1300;
-            //     patriotRunning = true;
-            //     $("#patriot").prop("src","images/Patriot/PatriotRun.gif")
-            // }
-            // var newPos = {left: newX};
+            // request another frame
 
-            // $("#patriot").animate(newPos,0);
-                
-            // update(progress)
-            // draw()
+            requestAnimationFrame(animate);
 
-            handleTrumpAnimations();
-            
+            // calc elapsed time since last loop
 
-            // //check if player is hit
-            // if(parseInt($("#patriot").css("left")) > 200 && parseInt($("#patriot").css("left")) < 300){
-            //     patriotHit = true;
-                
-            //     console.log("hit");
-            // }
+            now = Date.now();
+            elapsed = now - then;
 
-            // //run player hit animation
-            // if (patriotHit == true && patriotRunning){
-            //     $("#patriot").prop("src","images/Patriot/PatriotRunHit.gif")
-            //     patriotRunning = false;
-            //     patriotHit = false;
-            // }
-            
-            lastRender = timestamp
-            window.requestAnimationFrame(loop)
+            // if enough time has elapsed, draw the next frame
+
+            if (elapsed > fpsInterval) {
+
+                // Get ready for next frame by setting then=now
+                then = now - (elapsed % fpsInterval);
+
+                // Drawing functions
+                handleTrumpAnimations();
+                handlePatriotAnimations();
+                handleFortyNinerAnimations();
+                handleWhiteVikingAnimations();
+                handleBlackEagleAnimations();
+                handleBlackSteelerAnimations();
+                handleTurfAnimations();
+                handleStadiumAnimations();
+
+                var sinceStart = now - startTime;
+                var currentFps = Math.round(1000 / (sinceStart / ++frameCount) * 100) / 100;
+                $("#showFPS").text("FPS:" + currentFps);
+
+            }
+        }
+
+        function startAnimating(fps) {
+            fpsInterval = 1000 / fps;
+            then = Date.now();
+            startTime = then;
+            animate();
+        }
+
+        function handleStadiumAnimations(){
+            if($("#stadium2").css("left") == "-5000px"){
+
+                //set stadium 2 initial position
+                var newStadiumLeft = parseInt($("#stadium1").css("width"));
+                $("#stadium2").css("left", newStadiumLeft);
+
+            }
+
+            if(gameActive){
+
+                $("#stadium1").css("left","-=2px");
+                $("#stadium2").css("left","-=2px");
+
+                if( parseInt($("#stadium1").css("left")) < 0 && parseInt($("#stadium1").css("left")) > -100 ){
+                    var newStadiumLeft = parseInt($("#stadium1").css("width")) + parseInt($("#stadium1").css("left")) ;
+                    $("#stadium2").css("left", newStadiumLeft);
+                }
+
+                if( parseInt($("#stadium2").css("left")) < 0 && parseInt($("#stadium2").css("left")) > -100 ){
+                    var newStadiumLeft = parseInt($("#stadium2").css("width")) + parseInt($("#stadium2").css("left")) ;
+                    $("#stadium1").css("left", newStadiumLeft);
+                }
+
+
+            }
+
+        }
+
+        function handleTurfAnimations(){
+            if($("#turf2").css("left") == "-5000px"){
+
+                //set turf 2 initial position
+                var newTurfLeft = parseInt($("#turf1").css("width"));
+                $("#turf2").css("left", newTurfLeft);
+
+            }
+
+            if(gameActive){
+
+                $("#turf1").css("left","-=6px");
+                $("#turf2").css("left","-=6px");
+
+                if( parseInt($("#turf1").css("left")) < 0 && parseInt($("#turf1").css("left")) > -100 ){
+                    var newStadiumLeft = parseInt($("#turf1").css("width")) + parseInt($("#turf1").css("left")) ;
+                    $("#turf2").css("left", newStadiumLeft);
+                }
+
+                if( parseInt($("#turf2").css("left")) < 0 && parseInt($("#turf2").css("left")) > -100 ){
+                    var newStadiumLeft = parseInt($("#turf2").css("width")) + parseInt($("#turf2").css("left")) ;
+                    $("#turf1").css("left", newStadiumLeft);
+                }
+
+
+            }
+
         }
 
         function handleTrumpAnimations(){
@@ -120,28 +219,31 @@
                 
                     //normal animations
                     if(trumpIterator < 10){
-                        var newImage = trumpFilePath + "0" + trumpIterator + ".png";
+                        var newTrumpImage = trumpFilePath + "0" + trumpIterator + ".png";
                     } else {
-                        var newImage = trumpFilePath + trumpIterator + ".png";
+                        var newTrumpImage = trumpFilePath + trumpIterator + ".png";
                     }
-                    $("#trump").prop("src",newImage)
+                    $("#trump").prop("src",newTrumpImage)
 
                     if(trumpHit){
                         //trump hit animations
                         if(trumpHiterator < 10){
-                            var newImage = trumpFilePath + "00" + trumpHiterator + ".png";
+                            var newTrumpImage = trumpFilePath + "00" + trumpHiterator + ".png";
                         } else if (trumpHiterator < 100) {
-                            var newImage = trumpFilePath +  "0" + trumpHiterator + ".png";
+                            var newTrumpImage = trumpFilePath +  "0" + trumpHiterator + ".png";
                         } else {
-                            var newImage = trumpFilePath + trumpHiterator + ".png";
+                            var newTrumpImage = trumpFilePath + trumpHiterator + ".png";
                         }
-                        $("#trump").prop("src",newImage)
-
-                        if( $("#trump").css("left")  == "300px"){
+                        
+                        
+                        console.log($("#trump").css("left"));
+                        if( $("#trump").css("left")  == "150px"){
 
                             $("#trump").css("left","-=150px");
 
                         }
+
+                        $("#trump").prop("src",newTrumpImage)
 
                     }
                     
@@ -149,28 +251,193 @@
                     trumpIterator++;
 
                     //reset trumpIterator
-                    if(trumpIterator == 50 ){
+                    if(trumpIterator == 30){
                         trumpFilePath = "images/Trump/Run/TrumpRun_0";
                         trumpIterator = 0;
                     }
 
                     //reset trumpHiterator
-                    if(trumpHiterator == 136 ){
+                    if(trumpHiterator == 82 ){
+                        $("#trump").css("left","150px");
                         trumpFilePath = "images/Trump/Run/TrumpRun_0";
                         trumpHiterator = 0;
                         trumpHit = false;
-                        $("#trump").css("left","300px");
-                    }
+                        trumpRunning = false;
+                        trumpIdle = true;
+                    }        
+
         }
-        var lastRender = 0
-        window.requestAnimationFrame(loop)
+        
+        function handlePatriotAnimations(){
+
+            if(patriotRunning){
+
+            
+            //normal animations
+            if(patriotIterator < 10){
+                var newPatriotImage = patriotFilePath + "0" + patriotIterator + ".png";
+            } else {
+                var newPatriotImage = patriotFilePath + patriotIterator + ".png";
+            }
+            $("#patriot").prop("src",newPatriotImage)
+
+            patriotIterator++;
+
+            //reset patriotIterator
+            if(patriotIterator == 30){
+                patriotFilePath = "images/Patriot/Run/PatriotRun_0";
+                patriotIterator = 0;
+            }
+
+            if(patriotRunning){
+                $("#patriot").css("left","-=5px");
+            }
+
+            if( parseInt($("#patriot").css("left")) < -200 ){
+                $("#patriot").css("left","1200px");
+                
+            }
+        }
+        }
+
+        function handleFortyNinerAnimations(){
+
+            if(fortyNinerRunning){
+            //normal animations
+            if(fortyNinerIterator < 10){
+                var newFortyNinerImage = fortyNinerFilePath + "0" + fortyNinerIterator + ".png";
+            } else {
+                var newFortyNinerImage = fortyNinerFilePath + fortyNinerIterator + ".png";
+            }
+            $("#fortyNiner").prop("src",newFortyNinerImage)
+
+            fortyNinerIterator++;
+
+            //reset papatriotIterator
+            if(fortyNinerIterator == 30){
+                fortyNinerFilePath = "images/49er/Run/49erRun_0";
+                fortyNinerIterator = 0;
+            }
+
+            if(fortyNinerRunning){
+                $("#fortyNiner").css("left","-=5px");
+            }
+
+            if( parseInt($("#fortyNiner").css("left")) < -200 ){
+                $("#fortyNiner").css("left","1200px");
+                
+            }
+            }
+        }
+
+        function handleWhiteVikingAnimations(){
+            if(whiteVikingRunning){
+            //normal animations
+            if(whiteVikingIterator < 10){
+                var newWhiteVikingImage = whiteVikingFilePath + "0" + whiteVikingIterator + ".png";
+            } else {
+                var newWhiteVikingImage = whiteVikingFilePath + whiteVikingIterator + ".png";
+            }
+            $("#whiteViking").prop("src",newWhiteVikingImage)
+
+            whiteVikingIterator++;
+
+            //reset white viking iterator
+            if(whiteVikingIterator == 30){
+                whiteVikingFilePath = "images/White Viking/Run/WhiteVikingRun_0";
+                whiteVikingIterator = 0;
+            }
+
+            if(whiteVikingRunning){
+                $("#whiteViking").css("left","-=5px");
+            }
+
+            if( parseInt($("#whiteViking").css("left")) < -200 ){
+                $("#whiteViking").css("left","1200px");
+                
+            }
+            }
+        }
+        
+        function handleBlackEagleAnimations(){
+            if(blackEagleRunning){
+            //normal animations
+            if(blackEagleIterator < 10){
+                var newBlackEagleImage = blackEagleFilePath + "0" + blackEagleIterator + ".png";
+            } else {
+                var newBlackEagleImage = blackEagleFilePath + blackEagleIterator + ".png";
+            }
+            $("#blackEagle").prop("src",newBlackEagleImage)
+
+            blackEagleIterator++;
+
+            //reset blackEagleIterator
+            if(blackEagleIterator == 30){
+                blackEagleFilePath = "images/Black Eagle/Run/BlackEagleRun_0";
+                blackEagleIterator = 0;
+            }
+
+            if(blackEagleRunning){
+                $("#blackEagle").css("left","-=5px");
+            }
+
+            if( parseInt($("#blackEagle").css("left")) < -200 ){
+                $("#blackEagle").css("left","1200px");
+                
+            }
+            }
+        }
+
+        function handleBlackSteelerAnimations(){
+            if(blackSteelerRunning){
+            //normal animations
+            if(blackSteelerIterator < 10){
+                var newBlackSteelerImage = blackSteelerFilePath + "0" + blackSteelerIterator + ".png";
+            } else {
+                var newBlackSteelerImage = blackSteelerFilePath + blackSteelerIterator + ".png";
+            }
+            $("#blackSteeler").prop("src",newBlackSteelerImage)
+
+            blackSteelerIterator++;
+
+            //reset blackSteelerIterator
+            if(blackSteelerIterator == 30){
+                blackSteelerFilePath = "images/Black Steeler/Run/BlackSteelerRun_0";
+                blackSteelerIterator = 0;
+            }
+
+            if(blackSteelerRunning){
+                $("#blackSteeler").css("left","-=5px");
+            }
+
+            if( parseInt($("#blackSteeler").css("left")) < -200 ){
+                $("#blackSteeler").css("left","1200px");
+                
+            }
+            }
+        }
+
+        //refresh on resize
+        window.onresize = function(){ location.reload(); }
+
+        startAnimating(30);
 
     </script>
 </head>
 
-<body>
-
-    <img id="trump" src="images/Trump/Run/TrumpRun_000.png" alt="" style="left: 300px; height: 300px; position: absolute">  
+<body scroll ="no" style="margin:0; overflow: hidden">
+    <img id="stadium1" src="images/Terrain/STADIUM.png" alt="" style="height: 90%; position: absolute">   
+    <img id="stadium2" src="images/Terrain/STADIUM.png" alt="" style="left: -5000px; height: 90%; position: absolute">   
+    <img id="turf1" src="images/Terrain/Turf.png" alt="" style="bottom: 0; height: 20%; position: absolute">   
+    <img id="turf2" src="images/Terrain/Turf.png" alt="" style="left: -5000px; bottom: 0; height: 20%; position: absolute">   
+    <img id="trump" src="images/Trump/Run/TrumpRun_000.png" alt="" style="left: 150px; bottom: 10%; height: 40%; position: absolute">   
     
+    <img id="patriot" src="images/Patriot/Run/PatriotRun_000.png" alt="" style="left: 1200px; bottom: 10%; height: 40%; position: absolute">   
+    <img id="fortyNiner" src="images/49er/Run/49erRun_000.png" alt="" style="left: 1000px; bottom: 10%; height: 40%; position: absolute">   
+    <img id="whiteViking" src="images/White Viking/Run/WhiteVikingRun_000.png" alt="" style="left: 800px; bottom: 10%; height: 40%; position: absolute">   
+    <img id="blackEagle" src="images/Black Eagle/Run/BlackEagleRun_000.png" alt="" style="left: 600px; bottom: 10%; height: 40%; position: absolute">   
+    <img id="blackSteeler" src="images/Black Steeler/Run/BlackSteelerRun_000.png" alt="" style="left: 400px; bottom: 10%; height: 40%; position: absolute">   
+    
+    <p id="showFPS" style="position: absolute; left: 3%; font-size: 16px" ><b>FPS: 0</b></p>
 </body>
 </html>
