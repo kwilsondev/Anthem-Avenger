@@ -8,6 +8,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script>
 
+        //timers
+        window.setInterval(handleRandomSpawn,1000);
+
         //animation vars
         var stop = false;
         var frameCount = 0;
@@ -31,30 +34,35 @@
         //patriot vars
         var patriotIterator = 0;
         var patriotRunning = false;
+        var patriotKneeling = false;        
         var patriotHit = false;
         var patriotFilePath = "images/Patriot/Run/PatriotRun_0";
 
         //49er vars
         var fortyNinerIterator = 0;
-        var fortyNinerRunning = true;
+        var fortyNinerRunning = false;
+        var fortyNinerKneeling = false;        
         var fortyNinerHit = false;
         var fortyNinerFilePath = "images/49er/Run/49erRun_0";
 
         //white viking vars
         var whiteVikingIterator = 0;
         var whiteVikingRunning = false;
+        var whiteVikingKneeling = false;        
         var whiteVikingHit = false;
         var whiteVikingFilePath = "images/White Viking/Run/WhiteVikingRun_0";
 
         //black eagle vars
         var blackEagleIterator = 0;
-        var blackEagleRunning = true;
+        var blackEagleRunning = false;
+        var blackEagleKneeling = false;        
         var blackEagleHit = false;
         var blackEagleFilePath = "images/Black Eagle/Run/BlackEagleRun_0";
 
         //black eagle vars
         var blackSteelerIterator = 0;
         var blackSteelerRunning = false;
+        var blackSteelerKneeling = false;        
         var blackSteelerHit = false;
         var blackSteelerFilePath = "images/Black Steeler/Run/BlackSteelerRun_0";
    
@@ -140,6 +148,84 @@
             then = Date.now();
             startTime = then;
             animate();
+        }
+
+        function handleRandomSpawn(){
+
+            console.log("Spawn function");
+            var random = Math.floor(Math.random() * 100);
+
+            if(random >= 0 && random <= 20){
+
+                var positionRand = Math.floor(Math.random() * 2);
+                
+
+                if(!fortyNinerRunning && !fortyNinerKneeling){
+
+                    if(positionRand == 0){
+                        fortyNinerRunning = true;
+                        fortyNinerFilePath = "images/49er/Run/49erRun_0";
+                    } else {
+                        fortyNinerKneeling = true;
+                        fortyNinerFilePath = "images/49er/Kneel/49erKneel_0";
+                    }
+
+                    console.log("spawn 49er");
+                } else if(!blackEagleRunning && !blackEagleKneeling){
+                    blackEagleRunning = true;
+
+                    if(positionRand == 0){
+                        blackEagleRunning = true;
+                        blackEagleFilePath = "images/Black Eagle/Run/BlackEagleRun_0";
+                    } else {
+                        blackEagleKneeling = true;
+                        blackEagleFilePath = "images/Black Eagle/Kneel/BlackEagleKneel_0";
+                        
+                    }
+
+                    console.log("spawn Black Eagle");
+                } else if(!blackSteelerRunning && !blackSteelerKneeling){
+                    blackSteelerRunning = true;
+
+                    if(positionRand == 0){
+                        blackSteelerRunning = true;
+                        blackSteelerFilePath = "images/Black Steeler/Run/BlackSteelerRun_0";
+                    } else {
+                        blackSteelerKneeling = true;
+                        blackSteelerFilePath = "images/Black Steeler/Kneel/BlackSteelerKneel_0";
+                        
+                    }
+
+                    console.log("spawn Black Steeler");
+                } else if(!patriotRunning && !patriotKneeling){
+                    patriotRunning = true;
+
+                    if(positionRand == 0){
+                        patriotRunning = true;
+                        patriotFilePath = "images/Patriot/Run/PatriotRun_0";
+                    } else {
+                        patriotKneeling = true;
+                        patriotFilePath = "images/Patriot/Kneel/PatriotKneel_0";
+                        
+                    }
+
+                    console.log("spawn patriot");
+                } else if(!whiteVikingRunning && !whiteVikingKneeling){
+                    whiteVikingRunning = true;
+
+                    if(positionRand == 0){
+                        whiteVikingRunning = true;
+                        whiteVikingFilePath = "images/White Viking/Run/WhiteVikingRun_0";
+                    } else {
+                        whiteVikingKneeling = true;
+                        whiteVikingFilePath = "images/White Viking/Kneel/WhiteVikingKneel_0";
+                        
+                    }
+
+                    console.log("spawn White Viking");
+                }
+
+            }
         }
 
         function handleStadiumAnimations(){
@@ -273,147 +359,158 @@
             if(patriotRunning){
 
             
-            //normal animations
-            if(patriotIterator < 10){
-                var newPatriotImage = patriotFilePath + "0" + patriotIterator + ".png";
-            } else {
-                var newPatriotImage = patriotFilePath + patriotIterator + ".png";
-            }
-            $("#patriot").prop("src",newPatriotImage)
+                //normal animations
+                if(patriotIterator < 10){
+                    var newPatriotImage = patriotFilePath + "0" + patriotIterator + ".png";
+                } else {
+                    var newPatriotImage = patriotFilePath + patriotIterator + ".png";
+                }
+                $("#patriot").prop("src",newPatriotImage)
 
-            patriotIterator++;
+                patriotIterator++;
 
-            //reset patriotIterator
-            if(patriotIterator == 30){
-                patriotFilePath = "images/Patriot/Run/PatriotRun_0";
-                patriotIterator = 0;
-            }
+                //reset patriotIterator
+                if(patriotIterator == 30){
+                    patriotFilePath = "images/Patriot/Run/PatriotRun_0";
+                    patriotIterator = 0;
+                }
 
-            if(patriotRunning){
-                $("#patriot").css("left","-=5px");
-            }
+                if(patriotRunning){
+                    $("#patriot").css("left","-=5px");
+                }
 
-            if( parseInt($("#patriot").css("left")) < -200 ){
-                $("#patriot").css("left","1200px");
-                
+                if( parseInt($("#patriot").css("left")) < -200 ){
+                    $("#patriot").css("left","1500px");
+                    patriotRunning = false;
+                    
+                }
             }
-        }
         }
 
         function handleFortyNinerAnimations(){
 
-            if(fortyNinerRunning){
-            //normal animations
-            if(fortyNinerIterator < 10){
-                var newFortyNinerImage = fortyNinerFilePath + "0" + fortyNinerIterator + ".png";
-            } else {
-                var newFortyNinerImage = fortyNinerFilePath + fortyNinerIterator + ".png";
-            }
-            $("#fortyNiner").prop("src",newFortyNinerImage)
+            if(fortyNinerRunning || fortyNinerKneeling){
+                //normal animations
+                if(fortyNinerIterator < 10){
+                    var newFortyNinerImage = fortyNinerFilePath + "0" + fortyNinerIterator + ".png";
+                } else {
+                    var newFortyNinerImage = fortyNinerFilePath + fortyNinerIterator + ".png";
+                }
+                $("#fortyNiner").prop("src",newFortyNinerImage)
 
-            fortyNinerIterator++;
+                fortyNinerIterator++;
 
-            //reset papatriotIterator
-            if(fortyNinerIterator == 30){
-                fortyNinerFilePath = "images/49er/Run/49erRun_0";
-                fortyNinerIterator = 0;
-            }
+                //reset papatriotIterator
+                if(fortyNinerIterator == 30){
+                    if(fortyNinerRunning){
+                        fortyNinerFilePath = "images/49er/Run/49erRun_0";
+                    } else if(fortyNinerKneeling){
+                        fortyNinerFilePath = "images/49er/Kneel/49erKneel_0";
+                    }
 
-            if(fortyNinerRunning){
-                $("#fortyNiner").css("left","-=5px");
-            }
+                    fortyNinerIterator = 0;
+                }
 
-            if( parseInt($("#fortyNiner").css("left")) < -200 ){
-                $("#fortyNiner").css("left","1200px");
-                
-            }
+                if(fortyNinerRunning || fortyNinerKneeling){
+                    $("#fortyNiner").css("left","-=5px");
+                }
+
+                if( parseInt($("#fortyNiner").css("left")) < -200 ){
+                    $("#fortyNiner").css("left","1500px");
+                    fortyNinerRunning = false;
+                    fortyNinerKneeling = false;
+                    
+                }
             }
         }
 
         function handleWhiteVikingAnimations(){
             if(whiteVikingRunning){
-            //normal animations
-            if(whiteVikingIterator < 10){
-                var newWhiteVikingImage = whiteVikingFilePath + "0" + whiteVikingIterator + ".png";
-            } else {
-                var newWhiteVikingImage = whiteVikingFilePath + whiteVikingIterator + ".png";
-            }
-            $("#whiteViking").prop("src",newWhiteVikingImage)
+                //normal animations
+                if(whiteVikingIterator < 10){
+                    var newWhiteVikingImage = whiteVikingFilePath + "0" + whiteVikingIterator + ".png";
+                } else {
+                    var newWhiteVikingImage = whiteVikingFilePath + whiteVikingIterator + ".png";
+                }
+                $("#whiteViking").prop("src",newWhiteVikingImage)
 
-            whiteVikingIterator++;
+                whiteVikingIterator++;
 
-            //reset white viking iterator
-            if(whiteVikingIterator == 30){
-                whiteVikingFilePath = "images/White Viking/Run/WhiteVikingRun_0";
-                whiteVikingIterator = 0;
-            }
+                //reset white viking iterator
+                if(whiteVikingIterator == 30){
+                    whiteVikingFilePath = "images/White Viking/Run/WhiteVikingRun_0";
+                    whiteVikingIterator = 0;
+                }
 
-            if(whiteVikingRunning){
-                $("#whiteViking").css("left","-=5px");
-            }
+                if(whiteVikingRunning){
+                    $("#whiteViking").css("left","-=5px");
+                }
 
-            if( parseInt($("#whiteViking").css("left")) < -200 ){
-                $("#whiteViking").css("left","1200px");
-                
-            }
+                if( parseInt($("#whiteViking").css("left")) < -200 ){
+                    $("#whiteViking").css("left","1500px");
+                    whiteVikingRunning = false;
+                    
+                }
             }
         }
         
         function handleBlackEagleAnimations(){
             if(blackEagleRunning){
-            //normal animations
-            if(blackEagleIterator < 10){
-                var newBlackEagleImage = blackEagleFilePath + "0" + blackEagleIterator + ".png";
-            } else {
-                var newBlackEagleImage = blackEagleFilePath + blackEagleIterator + ".png";
-            }
-            $("#blackEagle").prop("src",newBlackEagleImage)
+                //normal animations
+                if(blackEagleIterator < 10){
+                    var newBlackEagleImage = blackEagleFilePath + "0" + blackEagleIterator + ".png";
+                } else {
+                    var newBlackEagleImage = blackEagleFilePath + blackEagleIterator + ".png";
+                }
+                $("#blackEagle").prop("src",newBlackEagleImage)
 
-            blackEagleIterator++;
+                blackEagleIterator++;
 
-            //reset blackEagleIterator
-            if(blackEagleIterator == 30){
-                blackEagleFilePath = "images/Black Eagle/Run/BlackEagleRun_0";
-                blackEagleIterator = 0;
-            }
+                //reset blackEagleIterator
+                if(blackEagleIterator == 30){
+                    blackEagleFilePath = "images/Black Eagle/Run/BlackEagleRun_0";
+                    blackEagleIterator = 0;
+                }
 
-            if(blackEagleRunning){
-                $("#blackEagle").css("left","-=5px");
-            }
+                if(blackEagleRunning){
+                    $("#blackEagle").css("left","-=5px");
+                }
 
-            if( parseInt($("#blackEagle").css("left")) < -200 ){
-                $("#blackEagle").css("left","1200px");
-                
-            }
+                if( parseInt($("#blackEagle").css("left")) < -200 ){
+                    $("#blackEagle").css("left","1500px");
+                    blackEagleRunning = false;
+                    
+                }
             }
         }
 
         function handleBlackSteelerAnimations(){
             if(blackSteelerRunning){
-            //normal animations
-            if(blackSteelerIterator < 10){
-                var newBlackSteelerImage = blackSteelerFilePath + "0" + blackSteelerIterator + ".png";
-            } else {
-                var newBlackSteelerImage = blackSteelerFilePath + blackSteelerIterator + ".png";
-            }
-            $("#blackSteeler").prop("src",newBlackSteelerImage)
+                //normal animations
+                if(blackSteelerIterator < 10){
+                    var newBlackSteelerImage = blackSteelerFilePath + "0" + blackSteelerIterator + ".png";
+                } else {
+                    var newBlackSteelerImage = blackSteelerFilePath + blackSteelerIterator + ".png";
+                }
+                $("#blackSteeler").prop("src",newBlackSteelerImage)
 
-            blackSteelerIterator++;
+                blackSteelerIterator++;
 
-            //reset blackSteelerIterator
-            if(blackSteelerIterator == 30){
-                blackSteelerFilePath = "images/Black Steeler/Run/BlackSteelerRun_0";
-                blackSteelerIterator = 0;
-            }
+                //reset blackSteelerIterator
+                if(blackSteelerIterator == 30){
+                    blackSteelerFilePath = "images/Black Steeler/Run/BlackSteelerRun_0";
+                    blackSteelerIterator = 0;
+                }
 
-            if(blackSteelerRunning){
-                $("#blackSteeler").css("left","-=5px");
-            }
+                if(blackSteelerRunning){
+                    $("#blackSteeler").css("left","-=5px");
+                }
 
-            if( parseInt($("#blackSteeler").css("left")) < -200 ){
-                $("#blackSteeler").css("left","1200px");
-                
-            }
+                if( parseInt($("#blackSteeler").css("left")) < -200 ){
+                    $("#blackSteeler").css("left","1500px");
+                    blackSteelerRunning = false;
+                    
+                }
             }
         }
 
@@ -432,11 +529,11 @@
     <img id="turf2" src="images/Terrain/Turf.png" alt="" style="left: -5000px; bottom: 0; height: 20%; position: absolute">   
     <img id="trump" src="images/Trump/Run/TrumpRun_000.png" alt="" style="left: 150px; bottom: 10%; height: 40%; position: absolute">   
     
-    <img id="patriot" src="images/Patriot/Run/PatriotRun_000.png" alt="" style="left: 1200px; bottom: 10%; height: 40%; position: absolute">   
-    <img id="fortyNiner" src="images/49er/Run/49erRun_000.png" alt="" style="left: 1000px; bottom: 10%; height: 40%; position: absolute">   
-    <img id="whiteViking" src="images/White Viking/Run/WhiteVikingRun_000.png" alt="" style="left: 800px; bottom: 10%; height: 40%; position: absolute">   
-    <img id="blackEagle" src="images/Black Eagle/Run/BlackEagleRun_000.png" alt="" style="left: 600px; bottom: 10%; height: 40%; position: absolute">   
-    <img id="blackSteeler" src="images/Black Steeler/Run/BlackSteelerRun_000.png" alt="" style="left: 400px; bottom: 10%; height: 40%; position: absolute">   
+    <img id="patriot" src="images/Patriot/Run/PatriotRun_000.png" alt="" style="left: 1500px; bottom: 10%; height: 40%; position: absolute">   
+    <img id="fortyNiner" src="images/49er/Run/49erRun_000.png" alt="" style="left: 1500px; bottom: 10%; height: 40%; position: absolute">   
+    <img id="whiteViking" src="images/White Viking/Run/WhiteVikingRun_000.png" alt="" style="left: 1500px; bottom: 10%; height: 40%; position: absolute">   
+    <img id="blackEagle" src="images/Black Eagle/Run/BlackEagleRun_000.png" alt="" style="left: 1500px; bottom: 10%; height: 40%; position: absolute">   
+    <img id="blackSteeler" src="images/Black Steeler/Run/BlackSteelerRun_000.png" alt="" style="left: 1500px; bottom: 10%; height: 40%; position: absolute">   
     
     <p id="showFPS" style="position: absolute; left: 3%; font-size: 16px" ><b>FPS: 0</b></p>
 </body>
