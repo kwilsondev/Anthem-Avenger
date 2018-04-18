@@ -356,7 +356,7 @@
         
         function handlePatriotAnimations(){
 
-            if(patriotRunning){
+            if(patriotRunning || patriotKneeling){
 
             
                 //normal animations
@@ -371,17 +371,25 @@
 
                 //reset patriotIterator
                 if(patriotIterator == 30){
-                    patriotFilePath = "images/Patriot/Run/PatriotRun_0";
+
+                    if(patriotRunning){
+                        patriotFilePath = "images/Patriot/Run/PatriotRun_0";
+                    } else if(patriotKneeling) {
+                        patriotFilePath = "images/Patriot/Kneel/PatriotKneel_0";
+                        
+                    }
+
                     patriotIterator = 0;
                 }
 
-                if(patriotRunning){
+                if(patriotRunning || patriotKneeling){
                     $("#patriot").css("left","-=5px");
                 }
 
                 if( parseInt($("#patriot").css("left")) < -200 ){
                     $("#patriot").css("left","1500px");
                     patriotRunning = false;
+                    patriotKneeling = false;
                     
                 }
             }
